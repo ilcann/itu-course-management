@@ -1,0 +1,42 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: docker/demo.Dockerfile
+    ports:
+      - "127.0.0.1:8080:80"
+    environment:
+      DB_HOST: db
+      DB_PORT: "3306"
+      DB_NAME: course_demo
+      DB_USER: course_demo
+      DB_PASS: ${DEMO_DB_PASSWORD:?Set DEMO_DB_PASSWORD in .env.demo}
+      DEMO_READ_ONLY: "true"
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+  db:
+    image: mariadb:11.4
+    environment:
+      MARIADB_DATABASE: course_demo
+      MARIADB_USER: course_demo
+      MARIADB_PASSWORD: ${DEMO_DB_PASSWORD:?Set DEMO_DB_PASSWORD in .env.demo}
+      MARIADB_ROOT_PASSWORD: ${DEMO_DB_ROOT_PASSWORD:?Set DEMO_DB_ROOT_PASSWORD in .env.demo}
+    volumes:
+      - demo_db:/var/lib/mysql
+      - ./backend/database/users.sql:/docker-entrypoint-initdb.d/010-users.sql:ro
+      - ./backend/database/courses.sql:/docker-entrypoint-initdb.d/020-courses.sql:ro
+      - ./backend/database/announcements.sql:/docker-entrypoint-initdb.d/030-announcements.sql:ro
+      - ./backend/database/course_materials.sql:/docker-entrypoint-initdb.d/040-materials.sql:ro
+      - ./backend/database/seeds/users.example.sql:/docker-entrypoint-initdb.d/050-users.sql:ro
+      - ./backend/database/seeds/courses.seed.sql:/docker-entrypoint-initdb.d/060-courses.sql:ro
+      - ./backend/database/seeds/announcements.seed.sql:/docker-entrypoint-initdb.d/070-announcements.sql:ro
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    restart: unless-stopped
+volumes:
+  demo_db:
