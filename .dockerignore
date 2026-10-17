@@ -21,3 +21,9 @@ yarn-error.log*
 
 # Optional local docs/outputs
 *.pdf
+
+# Exclude local credentials and original uploaded documents
+**/.env
+**/.env.*
+backend/storage/
+!frontend/public/files/*.pdf

@@ -6,6 +6,11 @@ export default function MainLayout() {
   return (
     <>
         <AppHeader />
+        {import.meta.env.VITE_DEMO_MODE === "true" && (
+          <aside role="note" className="border-b bg-muted px-4 py-3 text-center text-sm">
+            Portfolio demo · Örnek veriler · Salt okunur / Read-only
+          </aside>
+        )}
         <Outlet />
         <Spotlight />
     </>

@@ -1,13 +1,16 @@
 \documentclass[12pt,a4paper]{article}
 \usepackage[T1]{fontenc}
+\usepackage{lmodern}
 \usepackage[utf8]{inputenc}
-\usepackage[turkish]{babel}
+\usepackage[provide=*,turkish]{babel}
 \usepackage{geometry}
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{longtable}
-\usepackage{hyperref}
+\usepackage[hidelinks]{hyperref}
 \usepackage{listings}
+\lstset{breaklines=true,breakatwhitespace=false,columns=fullflexible,keepspaces=true}
+\setlength{\emergencystretch}{3em}
 \usepackage{xcolor}
 \usepackage{enumitem}
 \usepackage{float}
@@ -148,6 +151,7 @@ Veritabanının hızlı biçimde kurulabilmesi için örnek kullanıcılar tek b
 
 \begin{table}[H]
 \centering
+\resizebox{\textwidth}{!}{%
 \begin{tabular}{@{}llll@{}}
 \toprule
 \textbf{Rol} & \textbf{E-posta} & \textbf{Ad Soyad} & \textbf{Bilgi} \\
@@ -156,7 +160,7 @@ ADMIN & \texttt{admin@bitirme.local} & Recep İlcan & Parola: \texttt{Bitirme123
 INSTRUCTOR & \texttt{instructor@bitirme.local} & Deneme Eğitmen & Parola: \texttt{Bitirme123!} \\
 STUDENT & \texttt{student@bitirme.local} & Deneme Öğrenci & Öğrenci no: \texttt{20240000} \\
 \bottomrule
-\end{tabular}
+\end{tabular}}
 \end{table}
 
 Bu yapı, geliştirme ortamında rol bazlı erişim testlerinin hızlı biçimde yapılabilmesini sağlamaktadır.
@@ -347,3 +351,4 @@ jsPDF Library.
 \end{thebibliography}
 
 \end{document}
+

@@ -24,3 +24,10 @@ dist-ssr
 *.sw?
 
 docker/deployment/*
+.env.demo
+*.aux
+*.toc
+*.out
+*.fls
+*.fdb_latexmk
+*.synctex.gz
