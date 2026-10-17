@@ -1,203 +1,152 @@
-# İTÜ Matematik Bölümü Ders Yönetim Sistemi
+# İTÜ Ders Yönetim Sistemi
 
-İstanbul Teknik Üniversitesi Matematik Bölümü için geliştirilen ders yönetim sisteminin modern web teknolojileri ile yeniden tasarlanmış sürümü.
+İstanbul Teknik Üniversitesi Matematik Mühendisliği bitirme projesi kapsamında geliştirilen, React/TypeScript arayüzünü PHP API ve MySQL veritabanıyla birleştiren ders yönetim uygulaması.
 
-## Demo Bağlantıları
+Proje iki dönemde geliştirildi: **MAT 4901 / Bitirme I** arayüz modernizasyonunu, **MAT 4902 / Bitirme II** ise gerçek backend entegrasyonunu ve not/devamsızlık modüllerini kapsar. Bu depodaki güncel kod **Bitirme II** çalışmasını içerir.
 
-| Ortam | URL |
-|-------|-----|
-| Yeni Sistem | [web.itu.edu.tr/ilcan21](https://web.itu.edu.tr/ilcan21/) |
-| Eski Sistem | [mathavuz.itu.edu.tr](https://mathavuz.itu.edu.tr/) |
-| GitHub | [ilcann/bitirme](https://github.com/ilcann/bitirme) |
+## Sürümler ve demo durumu
 
-## Proje Özeti
+| Sürüm | Kapsam | Bağlantı / durum |
+| --- | --- | --- |
+| Önceki bölüm sistemi | Modernizasyon öncesindeki sistem | [mathavuz.itu.edu.tr](https://mathavuz.itu.edu.tr/) |
+| Bitirme I — MAT 4901 | React tabanlı arayüz modernizasyonu; mock veriyle çalışan ilk sürüm | [web.itu.edu.tr/ilcan21](https://web.itu.edu.tr/ilcan21/) |
+| Bitirme II — MAT 4902 | PHP API, MySQL, kimlik doğrulama, rol bazlı erişim, not ve devamsızlık yönetimi | Bu deponun güncel kaynak kodu |
+| Bitirme II portföy demosu | Ayrı Docker dağıtımı; örnek veriler ve salt okunur kullanım | Dağıtım dosyaları hazır; herkese açık demo adresi henüz eklenmedi |
 
-Bu proje; ders duyuruları, ders materyalleri, öğrenci listeleri, notlar ve devamsızlık yönetimini tek bir uygulamada birleştirir. Uygulama, rol bazlı erişim mantığı ile çalışır ve `ADMIN`, `INSTRUCTOR`, `STUDENT` kullanıcı tiplerine göre farklı ekranlar ve yetkiler sunar.
+**İTÜ sunucusundaki bağlantı Bitirme I sürümüne aittir; Bitirme II'nin güncel canlı demosu olarak değerlendirilmemelidir.**
 
-Öne çıkan başlıklar:
+## Özellikler
 
-- Tek arayüzden ders, duyuru, materyal, not ve devamsızlık yönetimi
-- Türkçe ve İngilizce dil desteği
-- Mobil uyumlu, SPA tabanlı kullanıcı deneyimi
-- Rol bazlı yetkilendirme
-- Not ve devamsızlık tabloları için PDF dışa aktarma
-- Gerçek backend ve MySQL veritabanı entegrasyonu
+- Ders, duyuru ve materyallerin tek uygulamada sunulması
+- `ADMIN`, `INSTRUCTOR` ve `STUDENT` rolleriyle kimlik doğrulama ve erişim kontrolü
+- Öğrenci listeleri ve derse kayıt işlemleri
+- Ders bazlı not dağılımları, not kayıtları ve haftalık devamsızlık takibi
+- Not ve devamsızlık tablolarının Türkçe karakter destekli PDF çıktısı
+- Türkçe/İngilizce arayüz, mobil uyum ve tema desteği
 
-## Gereksinimler
+Gerçek İTÜ merkezi kimlik doğrulama sistemi (SSO) entegre değildir; uygulama kendi hesap ve oturum mekanizmasını kullanır.
 
-### Zorunlu
+## Mimari ve teknoloji seçimi
 
-- Node.js 20 veya üzeri
-- npm
-- Docker Desktop veya Docker Engine
-- Docker Compose
-- Git
-
-### Önerilen
-
-- Visual Studio Code
-- MySQL istemcisi veya bir SQL yönetim aracı
-- Modern bir tarayıcı: Chrome, Edge veya Firefox
-
-## Teknoloji Yığını
+Backend, İTÜ'nün PHP tabanlı sunucu ortamına uyum sağlamak amacıyla PHP ile geliştirildi. Frontend ayrı bir React uygulamasıdır; üretim derlemesi Apache üzerinden PHP API ile aynı adreste sunulur. Üniversite kurulumuna ait `/ilcan21/` taban yolu korunur.
 
 | Katman | Teknolojiler |
-|--------|--------------|
+| --- | --- |
 | Frontend | React 19, TypeScript, Vite |
-| Stil | TailwindCSS v4, shadcn/ui, Radix UI |
-| Routing | React Router 7 |
-| State | TanStack Query |
-| i18n | i18next |
-| Animasyon | Framer Motion |
-| PDF | jsPDF, jspdf-autotable |
-| Backend | PHP 5.4, Apache |
-| Veritabanı | MySQL 5.6 |
+| Arayüz | Tailwind CSS v4, shadcn/ui, Radix UI |
+| Yönlendirme ve sunucu verisi | React Router 7, TanStack Query |
+| Dil ve animasyon | i18next, Framer Motion |
+| PDF çıktısı | jsPDF, jspdf-autotable |
+| Backend | PHP, PDO, Apache |
+| Veri katmanı | MySQL; ayrı demo dağıtımında MariaDB |
+| Eski yerel geliştirme ortamı | PHP 5.6 / MySQL 5.6 Docker yapılandırması |
+| Ayrı portföy demo ortamı | PHP 8.3 / Apache ve MariaDB 11.4 |
 
-## Klasör Yapısı
+`docker/php54.Dockerfile` dosyasının adı tarihsel olarak korunmuştur; mevcut taban imajı `php:5.6-apache` şeklindedir. Portföy demosu bu eski ortamdan ayrı yapılandırılmıştır.
 
-```text
-backend/
-├── config/        # Ortam ve veritabanı yardımcıları
-├── database/      # SQL şemaları ve seed dosyaları
-├── public/        # HTTP giriş noktaları
-├── src/           # Backend iş mantığı
-└── index.php      # Geriye dönük uyumluluk için wrapper
+## Hızlı başlangıç: Bitirme II portföy demosu
 
-frontend/
-├── src/
-│   ├── components/
-│   ├── hooks/
-│   ├── locale/
-│   ├── pages/
-│   ├── providers/
-│   ├── routes/
-│   └── services/
-└── package.json
-
-docker/
-├── docker-compose.yml
-└── php54.Dockerfile
-```
-
-## Kurulum
-
-### 1. Depoyu klonlayın
+Gereksinimler: Git, Docker Engine/Desktop ve Docker Compose.
 
 ```bash
-git clone https://github.com/ilcann/bitirme.git
-cd bitirme
+git clone https://github.com/ilcann/itu-course-management.git
+cd itu-course-management
+cp .env.demo.example .env.demo
 ```
 
-### 2. Docker servislerini başlatın
-
-Docker tabanlı ortam, frontend (Vite build), backend (PHP/Apache) ve veritabanını birlikte çalıştırır.
+`.env.demo` içindeki `DEMO_DB_PASSWORD` ve `DEMO_DB_ROOT_PASSWORD` alanlarına birbirinden farklı rastgele parolalar yazın. Ardından:
 
 ```bash
-docker compose -f docker/docker-compose.yml up -d --build
+docker compose --env-file .env.demo -f compose.demo.yaml up -d --build
 ```
 
-Bu komut şu servisleri ayağa kaldırır:
+Uygulama: [http://localhost:8080/ilcan21/](http://localhost:8080/ilcan21/)
 
-- `web` → PHP/Apache servisi (frontend `/ilcan21` + API `/ilcan21/api`)
-- `db` → MySQL veritabanı servisi
+Yeni ve boş veritabanı volume'ünde şemalar, örnek kullanıcılar, dersler ve duyurular otomatik yüklenir.
 
-Uygulama yerel ortamda şu adresten erişilebilir:
+### Demo hesapları
 
-```text
-http://localhost:8080/ilcan21/
-```
+| Rol | E-posta | Parola |
+| --- | --- | --- |
+| ADMIN | admin@bitirme.local | Bitirme123! |
+| INSTRUCTOR | instructor@bitirme.local | Bitirme123! |
+| STUDENT | student@bitirme.local | Bitirme123! |
 
-Backend API şu adresten erişilebilir:
+Bunlar yalnızca örnek hesaplardır. Portföy demo dağıtımında giriş/çıkış ve veri okuma açıktır; yönetici hesabıyla bile içerik değiştirme ve dosya yükleme işlemleri HTTP 403 döndürür. Bu sınırlama güncel uygulamanın tüm sürümlerine değil, ayrı demo dağıtımına aittir.
 
-```text
-http://localhost:8080/ilcan21/api/index.php
-```
+Mevcut yüklenmiş belgeler demo imajına kopyalanmaz; materyal tablosu başlangıçta boştur. Public yayın için HTTPS reverse proxy ve Docker çalıştırabilen bir sunucu gerekir. PHP API, standart statik Vercel dağıtımında çalışmaz.
 
-### 3. Veritabanını içe aktarın
+Kurulum ayrıntıları ve yayın öncesi runtime kontrolleri: [Demo dağıtım rehberi](docs/DEMO.md).
 
-İlk kurulumda SQL dosyalarını veritabanına sırasıyla içe aktarın. Genel sıra aşağıdaki gibidir:
+## Yerel frontend geliştirme
 
-1. `backend/database/users.sql`
-2. `backend/database/courses.sql`
-3. `backend/database/announcements.sql`
-4. `backend/database/course_materials.sql`
-
-Örnek komutlar:
-
-```bash
-docker exec -i mysql_db mysql -uroot -proot_password bitirme_db < backend/database/users.sql
-docker exec -i mysql_db mysql -uroot -proot_password bitirme_db < backend/database/courses.sql
-docker exec -i mysql_db mysql -uroot -proot_password bitirme_db < backend/database/announcements.sql
-docker exec -i mysql_db mysql -uroot -proot_password bitirme_db < backend/database/course_materials.sql
-```
-
-Örnek kullanıcıları hızlı kurulum için yüklemek isterseniz seed dosyasını da çalıştırabilirsiniz:
-
-```bash
-docker exec -i mysql_db mysql -uroot -proot_password bitirme_db < backend/database/seeds/users.example.sql
-```
-
-### 4. Frontend geliştirme (opsiyonel)
-
-Frontend artık Docker image build aşamasında otomatik derlenir ve Apache üzerinden servis edilir.
-
-Vite geliştirme sunucusunu sadece local geliştirme (HMR) için kullanmak isterseniz:
+Node.js 22 ve npm ile:
 
 ```bash
 cd frontend
-npm install
-```
-
-### 5. Frontend geliştirme sunucusunu başlatın
-
-```bash
+npm ci
 npm run dev
 ```
 
-Uygulama geliştirme modunda genellikle şu adresten açılır:
-
-```text
-http://localhost:5173
-```
-
-Docker içindeki production sürümünü güncellemek için frontend tarafında değişiklik yaptığınızda image'ı yeniden build edin:
+Vite geliştirme sunucusunda uygulama `http://localhost:5173/ilcan21/` adresinden açılır. `/ilcan21/api` istekleri `http://localhost:8080` adresine yönlendirilir; backend'in de çalışıyor olması gerekir.
 
 ```bash
-docker compose -f docker/docker-compose.yml up -d --build web
-```
-
-## Kullanılabilir Komutlar
-
-Frontend klasöründe aşağıdaki komutlar kullanılabilir:
-
-```bash
-npm run dev
 npm run build
 npm run preview
 npm run lint
 ```
 
-## Örnek Giriş Bilgileri
+`npm run build`, TypeScript kontrolünü ve üretim derlemesini çalıştırır.
 
-Seed klasöründe yer alan örnek kullanıcılar:
+## Üniversiteye yönelik eski yerel ortam
 
-| Rol | E-posta | Parola |
-|-----|---------|--------|
-| ADMIN | admin@bitirme.local | Bitirme123! |
-| INSTRUCTOR | instructor@bitirme.local | Bitirme123! |
-| STUDENT | student@bitirme.local | Bitirme123! |
+Önceki geliştirme ortamı `docker/docker-compose.yml` ve `docker/php54.Dockerfile` dosyalarında korunur:
 
-## Notlar
+```bash
+docker compose -f docker/docker-compose.yml up -d --build
+```
 
-- Backend, `backend/database/seeds/` klasöründeki örnek SQL dosyaları ile hızlı başlangıç için desteklenir. Bu klasörde kullanıcı, ders, duyuru ve materyal seed dosyaları ayrı ayrı tutulur.
-- Not ve devamsızlık dışa aktarımları Türkçe karakter desteği için gömülü Unicode font kullanır.
-- Frontend production ortamında API'ye doğrudan `/ilcan21/api` üzerinden erişir.
-- Vite proxy ayarı sadece `npm run dev` ile çalışan geliştirme sunucusu için kullanılır.
+Bu yapılandırmada veritabanı şemaları ve seed dosyaları elle içe aktarılır. Şema sırası: `users.sql`, `courses.sql`, `announcements.sql`, `course_materials.sql`; dosyalar `backend/database/` altındadır. Örnek veriler `backend/database/seeds/` klasöründedir.
 
-## Lisans
+Yeni portföy dağıtımı için yukarıdaki `compose.demo.yaml` yolunu kullanın.
 
-Bu proje İTÜ Matematik Mühendisliği Bölümü bitirme projesi kapsamında geliştirilmiştir.
+## Klasör yapısı
 
----
+```text
+backend/
+  config/         Ortam değişkenleri ve PDO bağlantısı
+  database/       SQL şemaları ve örnek veriler
+  public/         PHP API uç noktaları
+  src/            Backend iş mantığı
+frontend/
+  src/            React uygulaması
+  public/         Statik dosyalar
+docker/           Eski geliştirme ve ayrı demo yapılandırmaları
+docs/             Demo rehberi ve PDF raporları
+compose.demo.yaml Portföy demo servisleri
+main.tex          MAT 4901 rapor kaynağı
+main2.tex         MAT 4902 rapor kaynağı
+```
 
-**MAT 4902** - Matematik Müh. Tasarımı II | 2025-2026 Bahar Dönemi
+## Proje raporları
+
+| Rapor | İçerik | PDF | LaTeX kaynağı |
+| --- | --- | --- | --- |
+| MAT 4901 — Bitirme I | Arayüz modernizasyonu ve ilk frontend mimarisi | [Rapor](docs/MAT4901.pdf) | [main.tex](main.tex) |
+| MAT 4902 — Bitirme II | PHP/MySQL entegrasyonu, kimlik doğrulama, not ve devamsızlık modülleri | [Rapor](docs/MAT4902.pdf) | [main2.tex](main2.tex) |
+
+Raporlar kendi dönemlerindeki durumu anlatır; güncel demo dağıtım bilgileri için [docs/DEMO.md](docs/DEMO.md) esas alınmalıdır.
+
+LaTeX dağıtımı ve `latexmk` kuruluysa:
+
+```bash
+latexmk -pdf main.tex
+latexmk -pdf main2.tex
+```
+
+## Akademik kapsam
+
+**Recep İlcan — İstanbul Teknik Üniversitesi, Matematik Mühendisliği**  
+MAT 4901: 2025–2026 Güz · MAT 4902: 2025–2026 Bahar
+
+Bu depo bir bitirme projesini ve portföy demo hazırlığını içerir; üniversitenin resmî üretim sistemi olduğu iddiasını taşımaz.
